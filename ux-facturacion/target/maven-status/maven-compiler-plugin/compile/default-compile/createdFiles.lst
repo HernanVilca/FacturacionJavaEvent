@@ -1,0 +1,8 @@
+pe\wds\Facturacion\event\UserCreateEvent$UserCreateEventBuilder.class
+pe\wds\Facturacion\command\CreateUserCmd.class
+pe\wds\Facturacion\aggregate\UserAggregate.class
+pe\wds\Facturacion\FacturacionApplication.class
+pe\wds\Facturacion\aggregate\status.class
+pe\wds\Facturacion\aggregate\UserCredential$UserCredentialBuilder.class
+pe\wds\Facturacion\aggregate\UserCredential.class
+pe\wds\Facturacion\event\UserCreateEvent.class
