@@ -11,11 +11,13 @@ import pe.wds.Facturacion.command.ActivateBankAccountCmd;
 import pe.wds.Facturacion.command.CreateBankAccountCmd;
 import pe.wds.Facturacion.command.DebitBankAccountCmd;
 import pe.wds.Facturacion.command.DepositBankAccountCmd;
+import pe.wds.Facturacion.command.RollbackDebitBankAccountCmd;
 import pe.wds.Facturacion.command.WithdrawBankAccountCmd;
 import pe.wds.Facturacion.event.BankAccountActivatedEvent;
 import pe.wds.Facturacion.event.BankAccountCreatedEvent;
 import pe.wds.Facturacion.event.BankAccountDebitedEvent;
 import pe.wds.Facturacion.event.BankAccountDepositedEvent;
+import pe.wds.Facturacion.event.BankAccountRollbackedDebitEvent;
 import pe.wds.Facturacion.event.BankAccountWithdrawedEvent;
 
 @Aggregate
@@ -69,6 +71,9 @@ public class BankAccount {
         if (!this.status.equals("ACTIVE")){
             throw new RuntimeException("ILLEGAL_STATE");
         }
+        // if (this.status.equals("ACTIVE")){
+        //     throw new RuntimeException("ILLEGAL_STATE");
+        // }
         AggregateLifecycle.apply(BankAccountDepositedEvent.builder()
         .aggregateId(cmd.getAggregateId())
         .amount(cmd.getAmount())
@@ -129,6 +134,27 @@ public class BankAccount {
     public void onEvent(BankAccountDebitedEvent evt){
         System.err.println("BankAccountDebitedEvent" + evt);
         amount -= evt.getAmount();
+    }
+
+
+
+
+    // -----------------------
+    @CommandHandler
+    public void handle(RollbackDebitBankAccountCmd cmd){
+        if (!this.status.equals("ACTIVE")){
+            throw new RuntimeException("ILLEGAL_STATE");
+        }
+        AggregateLifecycle.apply(BankAccountRollbackedDebitEvent.builder()
+        .aggregateId(cmd.getAggregateId())
+        .amount(cmd.getAmount())
+        .build());
+    }
+
+    @EventSourcingHandler
+    public void onEvent(BankAccountRollbackedDebitEvent evt){
+        System.err.println("BankAccountRollbackedDebitEvent" + evt);
+        amount += evt.getAmount();
     }
     
 }
