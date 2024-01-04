@@ -9,10 +9,12 @@ import org.axonframework.spring.stereotype.Aggregate;
 import lombok.Getter;
 import pe.wds.Facturacion.command.ActivateBankAccountCmd;
 import pe.wds.Facturacion.command.CreateBankAccountCmd;
+import pe.wds.Facturacion.command.DebitBankAccountCmd;
 import pe.wds.Facturacion.command.DepositBankAccountCmd;
 import pe.wds.Facturacion.command.WithdrawBankAccountCmd;
 import pe.wds.Facturacion.event.BankAccountActivatedEvent;
 import pe.wds.Facturacion.event.BankAccountCreatedEvent;
+import pe.wds.Facturacion.event.BankAccountDebitedEvent;
 import pe.wds.Facturacion.event.BankAccountDepositedEvent;
 import pe.wds.Facturacion.event.BankAccountWithdrawedEvent;
 
@@ -100,5 +102,33 @@ public class BankAccount {
     }
 
 
+
+    // ----------------------------------------------------
+
+    @CommandHandler
+    public void handle(DebitBankAccountCmd cmd){
+        if (!this.status.equals("ACTIVE")){
+            throw new RuntimeException("ILLEGAL_STATE");
+        }
+        if (cmd.getAmount() > 500) {
+            throw new RuntimeException("EXCEEDED_AMOUNT");
+        }
+        if(this.amount < cmd.getAmount()){
+            throw new RuntimeException("INSUFFICIENT_FUNDS");
+        }
+
+        AggregateLifecycle.apply(BankAccountDebitedEvent.builder()
+        .aggregateId(cmd.getAggregateId())
+        .amount(cmd.getAmount())
+        .userTransferId(cmd.getUserTransferId())
+        .build());
+    }
+
+
+    @EventSourcingHandler
+    public void onEvent(BankAccountDebitedEvent evt){
+        System.err.println("BankAccountDebitedEvent" + evt);
+        amount -= evt.getAmount();
+    }
     
 }

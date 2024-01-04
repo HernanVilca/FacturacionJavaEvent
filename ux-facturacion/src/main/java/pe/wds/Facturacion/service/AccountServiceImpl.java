@@ -11,12 +11,14 @@ import org.springframework.stereotype.Service;
 
 import pe.wds.Facturacion.command.ActivateBankAccountCmd;
 import pe.wds.Facturacion.command.CreateBankAccountCmd;
+import pe.wds.Facturacion.command.DebitBankAccountCmd;
 import pe.wds.Facturacion.command.DepositBankAccountCmd;
 import pe.wds.Facturacion.command.WithdrawBankAccountCmd;
 import pe.wds.Facturacion.dto.AccountActivateDto;
 import pe.wds.Facturacion.dto.AccountCreateDto;
 import pe.wds.Facturacion.dto.AccountDepositDto;
 import pe.wds.Facturacion.dto.AccountWithdrawDto;
+import pe.wds.Facturacion.dto.DebitBankAccountDto;
 
 @Service
 public class AccountServiceImpl implements AccountService{
@@ -56,6 +58,12 @@ public class AccountServiceImpl implements AccountService{
     public List<Object> ListEvents(String accountId){
         System.err.println("Service Impl : "+accountId);
         return this.eventStore.readEvents(accountId).asStream().map(s -> s.getPayload()).collect(Collectors.toList());
+    }
+
+    @Override
+    public CompletableFuture<String> DebitAccount(DebitBankAccountDto debitBankAccountDto) {
+        // throw new UnsupportedOperationException("Unimplemented method 'DebitAccount'");
+        return commandGateway.send(new DebitBankAccountCmd(debitBankAccountDto.getAggregateId(), debitBankAccountDto.getAmount(), debitBankAccountDto.getUserTransferId()));
     }
 
     
