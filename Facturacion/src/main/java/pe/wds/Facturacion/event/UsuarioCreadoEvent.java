@@ -1,6 +1,4 @@
-package pe.wds.Facturacion.aggregate;
-
-import org.axonframework.modelling.command.AggregateIdentifier;
+package pe.wds.Facturacion.event;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,13 +9,15 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserCredential {
+public class UsuarioCreadoEvent {
+    private String id;
+    private String nombre;
+    private String apellido;
+    // private UserCredential credential;
 
-    @AggregateIdentifier
-	private String id;
+    private String status;
+    
     private String username;
 	private String password;
 
-    
-    
 }
