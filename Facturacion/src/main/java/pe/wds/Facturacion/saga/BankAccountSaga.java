@@ -2,6 +2,7 @@ package pe.wds.Facturacion.saga;
 
 import java.util.UUID;
 
+import org.axonframework.commandhandling.CommandResultMessage;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.modelling.saga.SagaEventHandler;
 import org.axonframework.modelling.saga.SagaLifecycle;
@@ -10,6 +11,7 @@ import org.axonframework.spring.stereotype.Saga;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import pe.wds.Facturacion.command.DepositBankAccountCmd;
+import pe.wds.Facturacion.command.RollbackDebitBankAccountCmd;
 import pe.wds.Facturacion.command.UsuarioCredencialCmd;
 import pe.wds.Facturacion.event.BankAccountDebitedEvent;
 import pe.wds.Facturacion.event.BankAccountDepositedEvent;
@@ -33,7 +35,16 @@ public class BankAccountSaga {
         Integer amount = bankAccountDebitedEvent.getAmount();
         SagaLifecycle.associateWith("userTransferId", agreegateId);
 
-        commandGateway.send(new DepositBankAccountCmd(agreegateId, amount));
+        String rollbackAggregateId = bankAccountDebitedEvent.getAggregateId();
+
+        commandGateway.send(new DepositBankAccountCmd(agreegateId, amount), (commandMessage, CommandResultMessage) ->{
+            if (CommandResultMessage.isExceptional()) {
+                System.out.println("llego al rollback atencion cali estamos en probelmas xd");
+                commandGateway.send(new RollbackDebitBankAccountCmd(rollbackAggregateId, amount));
+            }else{
+                System.out.println("comman sent successfully");
+            }
+        });
     }
     
 
