@@ -70,10 +70,7 @@ public class BankAccount {
     public void handle(DepositBankAccountCmd cmd){
         if (!this.status.equals("ACTIVE")){
             throw new RuntimeException("ILLEGAL_STATE");
-        }
-        // if (this.status.equals("ACTIVE")){
-        //     throw new RuntimeException("ILLEGAL_STATE");
-        // }
+        } 
         AggregateLifecycle.apply(BankAccountDepositedEvent.builder()
         .aggregateId(cmd.getAggregateId())
         .amount(cmd.getAmount())
@@ -108,8 +105,6 @@ public class BankAccount {
 
 
 
-    // ----------------------------------------------------
-
     @CommandHandler
     public void handle(DebitBankAccountCmd cmd){
         if (!this.status.equals("ACTIVE")){
@@ -137,9 +132,6 @@ public class BankAccount {
     }
 
 
-
-
-    // -----------------------
     @CommandHandler
     public void handle(RollbackDebitBankAccountCmd cmd){
         if (!this.status.equals("ACTIVE")){
