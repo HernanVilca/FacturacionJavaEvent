@@ -15,6 +15,7 @@ import pe.wds.Facturacion.dto.AccountActivateDto;
 import pe.wds.Facturacion.dto.AccountCreateDto;
 import pe.wds.Facturacion.dto.AccountDepositDto;
 import pe.wds.Facturacion.dto.AccountWithdrawDto;
+import pe.wds.Facturacion.dto.DebitBankAccountDto;
 import pe.wds.Facturacion.service.AccountService;
 
 @RestController
@@ -57,6 +58,13 @@ public class BankAccountCtrl {
     public List<Object> listEvents(@PathVariable("accountId") String accountId){
         System.err.println("AccounID xxxxxxxxxxxxxxx : "+accountId);
         return this.accountService.ListEvents(accountId);
+    }
+
+
+    // ---------------------
+    @PostMapping("/debito")
+    public CompletableFuture<String> DebitAccount(@RequestBody DebitBankAccountDto dto){
+        return this.accountService.DebitAccount(dto);
     }
     
 }

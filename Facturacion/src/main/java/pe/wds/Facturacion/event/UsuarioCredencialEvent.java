@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UsuarioCredencialEvent {
 
+    private String userId;
     private String id;
     private String username;
 	private String password;
