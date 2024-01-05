@@ -36,8 +36,10 @@ public class UsuarioAggregate {
 
         String password = cmd.getPassword();
         String documentNumber = cmd.getDocumentNumber();
+        String status = cmd.getStatus();
         System.out.println("tu DNI ES CORRECTO CALI:: "+ documentNumber);
 
+        System.out.println("status ::: "+ status);
         System.out.println("sssssssss poooososoosososondndddaajajaaajajja: "+ id);
         AggregateLifecycle.apply(UsuarioCreadoEvent.builder()
         .id(id)
@@ -46,6 +48,8 @@ public class UsuarioAggregate {
         .username(username)
         .password(password)
         .documentNumber(documentNumber)
+        .status("CREATED")
+        // .status("BLOQYEDCALI")
         .build());
     }
 
@@ -55,7 +59,12 @@ public class UsuarioAggregate {
         this.nombre = event.getNombre();
         this.apellido = event.getApellido();
         this.documentNumber = event.getDocumentNumber();
+        // this.status = event.getStatus();
         this.status = "CREATED";
+
+        System.out.println("creadooooooooooo xd c:::::: sxd ::: "+ this.status);
+        
+
     }
 
 
