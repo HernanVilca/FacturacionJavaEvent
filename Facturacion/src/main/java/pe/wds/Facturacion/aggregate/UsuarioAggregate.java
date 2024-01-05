@@ -8,8 +8,10 @@ import org.axonframework.spring.stereotype.Aggregate;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import pe.wds.Facturacion.command.ConfirmarDniUsuarioCmd;
 import pe.wds.Facturacion.command.CrearUsuarioCmd;
 import pe.wds.Facturacion.event.UsuarioCreadoEvent;
+import pe.wds.Facturacion.event.UsuarioDniConfirmadoEvent;
 
 @Getter
 @Aggregate
@@ -21,6 +23,7 @@ public class UsuarioAggregate {
     private String nombre;
     private String apellido;
     // private UserCredential credential;
+    private String documentNumber;
 
     private String status;
 
@@ -32,7 +35,11 @@ public class UsuarioAggregate {
         String username = cmd.getUsername();
 
         String password = cmd.getPassword();
+        String documentNumber = cmd.getDocumentNumber();
+        String status = cmd.getStatus();
+        System.out.println("tu DNI ES CORRECTO CALI:: "+ documentNumber);
 
+        System.out.println("status ::: "+ status);
         System.out.println("sssssssss poooososoosososondndddaajajaaajajja: "+ id);
         AggregateLifecycle.apply(UsuarioCreadoEvent.builder()
         .id(id)
@@ -40,6 +47,9 @@ public class UsuarioAggregate {
         .apellido(apellido)
         .username(username)
         .password(password)
+        .documentNumber(documentNumber)
+        .status("CREATED")
+        // .status("BLOQYEDCALI")
         .build());
     }
 
@@ -48,8 +58,30 @@ public class UsuarioAggregate {
         this.id = event.getId();
         this.nombre = event.getNombre();
         this.apellido = event.getApellido();
+        this.documentNumber = event.getDocumentNumber();
+        // this.status = event.getStatus();
         this.status = "CREATED";
+
+        System.out.println("creadooooooooooo xd c:::::: sxd ::: "+ this.status);
         
+
     }
 
+
+     @CommandHandler
+    public void handle(ConfirmarDniUsuarioCmd cmd){
+        String id = cmd.getId();
+        // String status = cmd.getStatus();
+
+        AggregateLifecycle.apply(UsuarioDniConfirmadoEvent.builder()
+        .id(id)
+        // .status(status)
+        .build());
+    }
+
+    @EventSourcingHandler
+    public void onEvent(UsuarioDniConfirmadoEvent event){
+        id = event.getId();
+        status = "ACTIVO";
+    }
 }

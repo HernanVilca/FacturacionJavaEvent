@@ -14,7 +14,7 @@ public class UsuarioCreadoEvent {
     private String nombre;
     private String apellido;
     // private UserCredential credential;
-
+    private String documentNumber;
     private String status;
     
     private String username;

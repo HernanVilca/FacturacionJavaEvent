@@ -14,6 +14,7 @@ public class CrearUsuarioCmd {
     private String nombre;
     private String apellido;
     // private UserCredential credential;
+    private String documentNumber;
     private String status;
     private String username;
 	private String password;
