@@ -19,7 +19,15 @@ public class CrearUsuarioServiceImpl implements CrearUsuarioService {
     @Override
     public CompletableFuture<String> CrearUsuario(CrearUsuarioDto crearUsuarioDto) {
         System.out.println("caliiiiiiiiiiiiiiiii::::::: " + crearUsuarioDto.getId());
-        return commandGateway.send(new CrearUsuarioCmd(UUID.randomUUID().toString(), crearUsuarioDto.getNombre(), crearUsuarioDto.getApellido(), crearUsuarioDto.getStatus(), crearUsuarioDto.getUsername(), crearUsuarioDto.getPassword()));
+        
+        return commandGateway.send(new CrearUsuarioCmd(UUID.randomUUID().toString(), 
+        crearUsuarioDto.getNombre(),
+        crearUsuarioDto.getApellido(),
+        crearUsuarioDto.getDocumentNumber(), 
+        crearUsuarioDto.getStatus(),
+        crearUsuarioDto.getUsername(), 
+        crearUsuarioDto.getPassword()
+        ));
     } 
 
 
